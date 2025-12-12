@@ -1,3 +1,3 @@
 export default function Closet() {
-  return <div>Closet</div>;
+  return <h1>Settings</h1>;
 }
