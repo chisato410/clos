@@ -1,0 +1,38 @@
+@use "../styles/variables" as v;
+
+.container {
+  padding: 16px;
+}
+
+.topBar {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 12px;
+}
+
+.filters {
+  display: flex;
+  gap: 8px;
+}
+
+.filterBtn,
+.sortBtn {
+  padding: 6px 12px;
+  // background: v.$surface;
+  // border: 1px solid v.$border;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.item img {
+  width: 100%;
+  height: auto;
+  border-radius: 4px;
+  object-fit: cover;
+}
