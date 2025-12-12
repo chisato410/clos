@@ -1,9 +1,9 @@
 import AppLayout from "../components/layouts/AppLayout";
 
-export default function Home() {
+export default function Memo() {
   return (
-    <AppLayout title="Home">
-      <p>ホーム画面</p>
+    <AppLayout title="メモ">
+      <p>メモ一覧</p>
     </AppLayout>
   );
 }

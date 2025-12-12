@@ -2,8 +2,8 @@ import AppLayout from "../components/layouts/AppLayout";
 
 export default function Closet() {
   return (
-    <AppLayout title="クローゼット">
-      <p>クローゼット一覧</p>
+    <AppLayout title="追加">
+      <p>追加</p>
     </AppLayout>
   );
 }
