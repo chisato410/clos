@@ -1,0 +1,17 @@
+// src/components/layouts/AppLayout.module.scss
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100dvh; // スマホのブラウザのアドレスバーを考慮した高さ
+  width: 100%;
+  overflow: hidden; // 全体ははみ出さない
+}
+
+.main {
+  flex: 1; // 残りのスペースをすべて使う
+  overflow-y: auto; // ここだけスクロールさせる
+  padding: 16px; // Figmaの余白に合わせて調整
+  background-color: var(--bg-color, #f9f9f9);
+}
+
+// HeaderとBottomNavは勝手に上下に固定されます

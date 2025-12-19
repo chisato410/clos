@@ -1,28 +1,22 @@
+// src/pages/Closet.jsx
 import AppLayout from "../components/layouts/AppLayout";
+import ClothingCard from "../components/ui/ClothingCard";
 import styles from "./Closet.module.scss";
 
-export default function Closet() {
+export default function Closet({ items }) {
   return (
     <AppLayout title="クローゼット">
       <div className={styles.container}>
-        {/* 上部メニュー */}
-        <div className={styles.topBar}>
-          <div className={styles.filters}>
-            <button className={styles.filterBtn}>絞り込み</button>
-            <button className={styles.sortBtn}>並び替え</button>
-          </div>
+        {/* 絞り込み・並び替えエリア */}
+        <div className={styles.filterBar}>
+          <button>絞り込み</button>
+          <button>並びび替え</button>
         </div>
 
-        {/* アイテムグリッド */}
+        {/* グリッド部分 */}
         <div className={styles.grid}>
-          {/* ダミーの服アイテム */}
-          {Array.from({ length: 12 }).map((_, i) => (
-            <div key={i} className={styles.item}>
-              <img
-                src="https://via.placeholder.com/300x400?text=Item"
-                alt="item"
-              />
-            </div>
+          {items.map((item) => (
+            <ClothingCard key={item.id} item={item} />
           ))}
         </div>
       </div>

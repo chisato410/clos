@@ -1,3 +1,4 @@
+// src/components/ui/Header.jsx
 import styles from "./Header.module.scss";
 
 export default function Header({ title }) {

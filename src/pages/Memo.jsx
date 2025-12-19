@@ -1,3 +1,4 @@
+// src/pages/Memo.jsx
 import AppLayout from "../components/layouts/AppLayout";
 
 export default function Memo() {

@@ -1,3 +1,4 @@
+// src/components/ui/BottomNav.jsx
 import { NavLink } from "react-router-dom";
 import styles from "./BottomNav.module.scss";
 

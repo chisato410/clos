@@ -1,3 +1,4 @@
+// src/pages/Home.jsx
 import AppLayout from "../components/layouts/AppLayout";
 
 export default function Home() {
