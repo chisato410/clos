@@ -1,18 +1,19 @@
 // src/components/ui/Header.module.scss
 .header {
-  height: 60px; // 高さを固定
+  height: 60px; // Figmaのサイズに合わせて調整
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #fff;
-  border-bottom: 1px solid #eee;
-  position: sticky; // またはAppLayoutで管理する場合は不要
+  background-color: #ffffff;
+  border-bottom: 1px solid #eeeeee;
+  position: sticky;
   top: 0;
   z-index: 100;
+  width: 100%;
 
-  h1 {
-    font-size: 1.2rem;
-    font-weight: 600;
-    margin: 0;
+  .logo {
+    height: 24px; // ロゴの高さ。Figma上のサイズに合わせる
+    width: auto;
+    object-fit: contain;
   }
 }
