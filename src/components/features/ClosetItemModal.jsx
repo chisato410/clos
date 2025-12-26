@@ -1,7 +1,5 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import AppLayout from "../components/layouts/AppLayout";
-import styles from "./Add.module.scss";
+import { useState, useEffect } from "react";
+import styles from "./ClosetItemModal.module.scss";
 
 const CATEGORIES = [
   "トップス",
@@ -42,8 +40,12 @@ const COLORS = [
   "その他",
 ];
 
-export default function Add({ addItem }) {
-  const navigate = useNavigate();
+export default function ClosetItemModal({
+  initialData = null,
+  onSave,
+  onDelete,
+  onClose,
+}) {
   const [image, setImage] = useState(null);
   const [category, setCategory] = useState("");
   const [genre, setGenre] = useState("");
@@ -56,6 +58,21 @@ export default function Add({ addItem }) {
   const [isArchived, setIsArchived] = useState(false);
   const [memo, setMemo] = useState("");
 
+  useEffect(() => {
+    if (initialData) {
+      setImage(initialData.image || null);
+      setCategory(initialData.category || "");
+      setGenre(initialData.genre || "");
+      setSize(initialData.size || "");
+      setColor(initialData.color || "");
+      setBrand(initialData.brand || "");
+      setPrice(initialData.price || "");
+      setTags(initialData.tags || []);
+      setIsArchived(initialData.isArchived || false);
+      setMemo(initialData.memo || "");
+    }
+  }, [initialData]);
+
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -66,7 +83,7 @@ export default function Add({ addItem }) {
   };
 
   const handleAddTag = () => {
-    if (tagInput.trim() && !tags.includes(tagInput.trim()) && tags.length < 3) {
+    if (tagInput.trim() && !tags.includes(tagInput.trim())) {
       setTags([...tags, tagInput.trim()]);
       setTagInput("");
     }
@@ -78,8 +95,8 @@ export default function Add({ addItem }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const newItem = {
-      id: `c${Date.now()}`,
+    const data = {
+      id: initialData?.id || `c${Date.now()}`,
       image,
       category,
       genre,
@@ -90,15 +107,27 @@ export default function Add({ addItem }) {
       tags,
       isArchived,
       memo,
-      createdAt: new Date().toISOString(),
+      createdAt: initialData?.createdAt || new Date().toISOString(),
     };
-    addItem(newItem);
-    navigate("/closet");
+    onSave(data);
+  };
+
+  const handleBackdropClick = (e) => {
+    if (e.target === e.currentTarget) {
+      onClose();
+    }
   };
 
   return (
-    <AppLayout title="追加">
-      <div className={styles.container}>
+    <div className={styles.modalOverlay} onClick={handleBackdropClick}>
+      <div className={styles.modal}>
+        <div className={styles.modalHeader}>
+          <h2>{initialData ? "服を編集" : "服を追加"}</h2>
+          <button onClick={onClose} className={styles.closeBtn}>
+            ✕
+          </button>
+        </div>
+
         <form onSubmit={handleSubmit} className={styles.form}>
           {/* 画像アップロード */}
           <div className={styles.imageSection}>
@@ -279,12 +308,23 @@ export default function Add({ addItem }) {
             />
           </div>
 
-          {/* 保存ボタン */}
-          <button type="submit" className={styles.saveBtn}>
-            保存
-          </button>
+          {/* フッター */}
+          <div className={styles.modalFooter}>
+            {initialData && (
+              <button
+                type="button"
+                onClick={() => onDelete(initialData.id)}
+                className={styles.deleteBtn}
+              >
+                削除
+              </button>
+            )}
+            <button type="submit" className={styles.saveBtn}>
+              保存
+            </button>
+          </div>
         </form>
       </div>
-    </AppLayout>
+    </div>
   );
 }
