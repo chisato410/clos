@@ -1,6 +1,12 @@
 import styles from "./HorizontalSection.module.scss";
 
-export default function HorizontalSection({ title, data, type, onMoreClick }) {
+export default function HorizontalSection({
+  title,
+  data,
+  type,
+  onMoreClick,
+  onItemClick,
+}) {
   const isMemo = type === "memo";
 
   return (
@@ -14,7 +20,12 @@ export default function HorizontalSection({ title, data, type, onMoreClick }) {
         <div className={styles.memoList}>
           {data && data.length > 0 ? (
             data.map((item) => (
-              <div key={item.id} className={styles.memoListItem}>
+              <div
+                key={item.id}
+                className={styles.memoListItem}
+                onClick={() => onItemClick(item)} // クリックで遷移
+                style={{ cursor: "pointer" }}
+              >
                 <div className={styles.memoInfo}>
                   <p className={styles.memoTitle}>
                     {item.title || "無題のメモ"}
@@ -48,6 +59,8 @@ export default function HorizontalSection({ title, data, type, onMoreClick }) {
                   className={`${styles.itemCard} ${
                     item.isArchived ? styles.archived : ""
                   }`}
+                  onClick={() => onItemClick(item)} // クリックで遷移
+                  style={{ cursor: "pointer" }}
                 >
                   {item.image ? (
                     <img src={item.image} alt="" />

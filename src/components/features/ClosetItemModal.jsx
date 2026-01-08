@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import styles from "./ClosetItemModal.module.scss";
 
 const CATEGORIES = [
@@ -11,7 +11,6 @@ const CATEGORIES = [
   "アクセサリー",
   "その他",
 ];
-
 const GENRES = [
   "カジュアル",
   "フォーマル",
@@ -20,9 +19,7 @@ const GENRES = [
   "きれいめ",
   "ナチュラル",
 ];
-
 const SIZES = ["XS", "S", "M", "L", "XL", "XXL", "フリー"];
-
 const COLORS = [
   "黒",
   "白",
@@ -46,32 +43,23 @@ export default function ClosetItemModal({
   onDelete,
   onClose,
 }) {
-  const [image, setImage] = useState(null);
-  const [category, setCategory] = useState("");
-  const [genre, setGenre] = useState("");
-  const [size, setSize] = useState("");
-  const [color, setColor] = useState("");
-  const [brand, setBrand] = useState("");
-  const [price, setPrice] = useState("");
-  const [tags, setTags] = useState([]);
-  const [tagInput, setTagInput] = useState("");
-  const [isArchived, setIsArchived] = useState(false);
-  const [memo, setMemo] = useState("");
+  // --- モード管理ステート ---
+  const [isEditing, setIsEditing] = useState(!initialData);
 
-  useEffect(() => {
-    if (initialData) {
-      setImage(initialData.image || null);
-      setCategory(initialData.category || "");
-      setGenre(initialData.genre || "");
-      setSize(initialData.size || "");
-      setColor(initialData.color || "");
-      setBrand(initialData.brand || "");
-      setPrice(initialData.price || "");
-      setTags(initialData.tags || []);
-      setIsArchived(initialData.isArchived || false);
-      setMemo(initialData.memo || "");
-    }
-  }, [initialData]);
+  // --- フォームステート (初期値として initialData を反映) ---
+  const [image, setImage] = useState(initialData?.image || null); // ← ここを修正しました
+  const [category, setCategory] = useState(initialData?.category || "");
+  const [genre, setGenre] = useState(initialData?.genre || "");
+  const [size, setSize] = useState(initialData?.size || "");
+  const [color, setColor] = useState(initialData?.color || "");
+  const [brand, setBrand] = useState(initialData?.brand || "");
+  const [price, setPrice] = useState(initialData?.price || "");
+  const [tags, setTags] = useState(initialData?.tags || []);
+  const [tagInput, setTagInput] = useState("");
+  const [isArchived, setIsArchived] = useState(
+    initialData?.isArchived || false
+  );
+  const [memo, setMemo] = useState(initialData?.memo || "");
 
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
@@ -110,44 +98,58 @@ export default function ClosetItemModal({
       createdAt: initialData?.createdAt || new Date().toISOString(),
     };
     onSave(data);
-  };
-
-  const handleBackdropClick = (e) => {
-    if (e.target === e.currentTarget) {
-      onClose();
-    }
+    setIsEditing(false);
   };
 
   return (
-    <div className={styles.modalOverlay} onClick={handleBackdropClick}>
+    <div
+      className={styles.modalOverlay}
+      onClick={(e) => e.target === e.currentTarget && onClose()}
+    >
       <div className={styles.modal}>
         <div className={styles.modalHeader}>
-          <h2>{initialData ? "服を編集" : "服を追加"}</h2>
+          <h2>
+            {isEditing ? (initialData ? "服を編集" : "服を追加") : "服の詳細"}
+          </h2>
           <button onClick={onClose} className={styles.closeBtn}>
             ✕
           </button>
         </div>
 
         <form onSubmit={handleSubmit} className={styles.form}>
-          {/* 画像アップロード */}
+          {/* 画像セクション */}
           <div className={styles.imageSection}>
-            <label className={styles.imageUpload}>
-              {image ? (
-                <img src={image} alt="プレビュー" />
-              ) : (
-                <div className={styles.uploadPlaceholder}>
-                  <span>＋</span>
-                  <span>写真を追加する</span>
-                </div>
-              )}
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleImageUpload}
-                style={{ display: "none" }}
-              />
-            </label>
-            {image && (
+            {isEditing ? (
+              <label className={styles.imageUpload}>
+                {image ? (
+                  <img src={image} alt="プレビュー" />
+                ) : (
+                  <div className={styles.uploadPlaceholder}>
+                    <span>＋</span>
+                    <span>写真を追加する</span>
+                  </div>
+                )}
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageUpload}
+                  style={{ display: "none" }}
+                />
+              </label>
+            ) : (
+              <div className={styles.imagePreview}>
+                {image ? (
+                  <img
+                    src={image}
+                    alt="アイテム"
+                    className={styles.mainImage}
+                  />
+                ) : (
+                  <div className={styles.noImage}>No Image</div>
+                )}
+              </div>
+            )}
+            {isEditing && image && (
               <button
                 type="button"
                 onClick={() => setImage(null)}
@@ -158,114 +160,106 @@ export default function ClosetItemModal({
             )}
           </div>
 
-          {/* カテゴリー */}
-          <div className={styles.formGroup}>
-            <label>カテゴリー</label>
-            <select
+          <div className={styles.infoGrid}>
+            <DetailItem
+              label="カテゴリー"
               value={category}
-              onChange={(e) => setCategory(e.target.value)}
-              required
+              isEditing={isEditing}
             >
-              <option value="">選択する</option>
-              {CATEGORIES.map((cat) => (
-                <option key={cat} value={cat}>
-                  {cat}
-                </option>
-              ))}
-            </select>
+              <select
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
+                required
+              >
+                <option value="">選択する</option>
+                {CATEGORIES.map((cat) => (
+                  <option key={cat} value={cat}>
+                    {cat}
+                  </option>
+                ))}
+              </select>
+            </DetailItem>
+
+            <DetailItem label="ジャンル" value={genre} isEditing={isEditing}>
+              <select value={genre} onChange={(e) => setGenre(e.target.value)}>
+                <option value="">選択する</option>
+                {GENRES.map((g) => (
+                  <option key={g} value={g}>
+                    {g}
+                  </option>
+                ))}
+              </select>
+            </DetailItem>
+
+            <DetailItem label="サイズ" value={size} isEditing={isEditing}>
+              <select value={size} onChange={(e) => setSize(e.target.value)}>
+                <option value="">選択する</option>
+                {SIZES.map((s) => (
+                  <option key={s} value={s}>
+                    {s}
+                  </option>
+                ))}
+              </select>
+            </DetailItem>
+
+            <DetailItem label="色" value={color} isEditing={isEditing}>
+              <select value={color} onChange={(e) => setColor(e.target.value)}>
+                <option value="">選択する</option>
+                {COLORS.map((c) => (
+                  <option key={c} value={c}>
+                    {c}
+                  </option>
+                ))}
+              </select>
+            </DetailItem>
+
+            <DetailItem label="ブランド" value={brand} isEditing={isEditing}>
+              <input
+                type="text"
+                value={brand}
+                onChange={(e) => setBrand(e.target.value)}
+                placeholder="入力する"
+              />
+            </DetailItem>
+
+            <DetailItem label="価格" value={price} isEditing={isEditing}>
+              <input
+                type="text"
+                value={price}
+                onChange={(e) => setPrice(e.target.value)}
+                placeholder="入力する"
+              />
+            </DetailItem>
           </div>
 
-          {/* ジャンル */}
           <div className={styles.formGroup}>
-            <label>ジャンル</label>
-            <select value={genre} onChange={(e) => setGenre(e.target.value)}>
-              <option value="">選択する</option>
-              {GENRES.map((g) => (
-                <option key={g} value={g}>
-                  {g}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {/* サイズ */}
-          <div className={styles.formGroup}>
-            <label>サイズ</label>
-            <select value={size} onChange={(e) => setSize(e.target.value)}>
-              <option value="">選択する</option>
-              {SIZES.map((s) => (
-                <option key={s} value={s}>
-                  {s}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {/* 色 */}
-          <div className={styles.formGroup}>
-            <label>色</label>
-            <select value={color} onChange={(e) => setColor(e.target.value)}>
-              <option value="">選択する</option>
-              {COLORS.map((c) => (
-                <option key={c} value={c}>
-                  {c}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {/* ブランド */}
-          <div className={styles.formGroup}>
-            <label>ブランド</label>
-            <input
-              type="text"
-              value={brand}
-              onChange={(e) => setBrand(e.target.value)}
-              placeholder="入力する"
-            />
-          </div>
-
-          {/* 価格 */}
-          <div className={styles.formGroup}>
-            <label>価格</label>
-            <input
-              type="text"
-              value={price}
-              onChange={(e) => setPrice(e.target.value)}
-              placeholder="入力する"
-            />
-          </div>
-
-          {/* タグ */}
-          <div className={styles.formGroup}>
-            <label>タグ（3つまで）</label>
+            <label>タグ</label>
             <div className={styles.tagContainer}>
               {tags.map((tag) => (
                 <span key={tag} className={styles.tag}>
                   {tag}
-                  <button
-                    type="button"
-                    onClick={() => handleRemoveTag(tag)}
-                    className={styles.tagRemove}
-                  >
-                    ×
-                  </button>
+                  {isEditing && (
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveTag(tag)}
+                      className={styles.tagRemove}
+                    >
+                      ×
+                    </button>
+                  )}
                 </span>
               ))}
+              {!isEditing && tags.length === 0 && (
+                <span className={styles.emptyVal}>なし</span>
+              )}
             </div>
-            {tags.length < 3 && (
+            {isEditing && tags.length < 3 && (
               <div className={styles.tagInput}>
                 <input
                   type="text"
                   value={tagInput}
                   onChange={(e) => setTagInput(e.target.value)}
-                  onKeyPress={(e) => {
-                    if (e.key === "Enter") {
-                      e.preventDefault();
-                      handleAddTag();
-                    }
-                  }}
-                  placeholder="入力する"
+                  placeholder="タグを追加"
                 />
                 <button type="button" onClick={handleAddTag}>
                   追加
@@ -274,57 +268,89 @@ export default function ClosetItemModal({
             )}
           </div>
 
-          {/* 保存場所 */}
           <div className={styles.formGroup}>
             <label>保存場所</label>
-            <div className={styles.radioGroup}>
-              <label>
-                <input
-                  type="radio"
-                  checked={!isArchived}
-                  onChange={() => setIsArchived(false)}
-                />
-                クローゼット
-              </label>
-              <label>
-                <input
-                  type="radio"
-                  checked={isArchived}
-                  onChange={() => setIsArchived(true)}
-                />
-                アーカイブ
-              </label>
-            </div>
+            {isEditing ? (
+              <div className={styles.radioGroup}>
+                <label>
+                  <input
+                    type="radio"
+                    checked={!isArchived}
+                    onChange={() => setIsArchived(false)}
+                  />{" "}
+                  クローゼット
+                </label>
+                <label>
+                  <input
+                    type="radio"
+                    checked={isArchived}
+                    onChange={() => setIsArchived(true)}
+                  />{" "}
+                  アーカイブ
+                </label>
+              </div>
+            ) : (
+              <p className={styles.viewValue}>
+                {isArchived ? "アーカイブ" : "クローゼット"}
+              </p>
+            )}
           </div>
 
-          {/* メモ */}
           <div className={styles.formGroup}>
             <label>メモ</label>
-            <textarea
-              value={memo}
-              onChange={(e) => setMemo(e.target.value)}
-              rows={4}
-              placeholder=""
-            />
+            {isEditing ? (
+              <textarea
+                value={memo}
+                onChange={(e) => setMemo(e.target.value)}
+                rows={4}
+                placeholder="メモを入力..."
+              />
+            ) : (
+              <p className={styles.viewValue}>{memo || "なし"}</p>
+            )}
           </div>
 
-          {/* フッター */}
           <div className={styles.modalFooter}>
-            {initialData && (
+            {isEditing ? (
+              <>
+                {initialData && (
+                  <button
+                    type="button"
+                    onClick={() => onDelete(initialData.id)}
+                    className={styles.deleteBtn}
+                  >
+                    削除
+                  </button>
+                )}
+                <button type="submit" className={styles.saveBtn}>
+                  保存する
+                </button>
+              </>
+            ) : (
               <button
                 type="button"
-                onClick={() => onDelete(initialData.id)}
-                className={styles.deleteBtn}
+                onClick={() => setIsEditing(true)}
+                className={styles.editBtn}
               >
-                削除
+                編集する
               </button>
             )}
-            <button type="submit" className={styles.saveBtn}>
-              保存
-            </button>
           </div>
         </form>
       </div>
+    </div>
+  );
+}
+
+function DetailItem({ label, value, isEditing, children }) {
+  return (
+    <div className={styles.formGroup}>
+      <label>{label}</label>
+      {isEditing ? (
+        children
+      ) : (
+        <p className={styles.viewValue}>{value || "未設定"}</p>
+      )}
     </div>
   );
 }

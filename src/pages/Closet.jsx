@@ -6,18 +6,33 @@ import styles from "./Closet.module.scss";
 
 export default function Closet({ items, setItems }) {
   const location = useLocation();
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editingItem, setEditingItem] = useState(null);
-  const [tempSearchQuery, setTempSearchQuery] = useState("");
-  const [searchQuery, setSearchQuery] = useState("");
-  const [filterCategory, setFilterCategory] = useState("すべて");
+  const containerRef = useRef(null);
+
+  // --- 修正の鍵：useEffectを使わず、location.stateから直接変数を定義する ---
+
+  // 1. 保存場所フィルタ（useStateの初期値としてlocation.stateを使用）
   const [archiveFilter, setArchiveFilter] = useState(
     location.state?.defaultFilter || "すべて"
   );
+
+  // 2. 検索・ソート状態
+  const [tempSearchQuery, setTempSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filterCategory, setFilterCategory] = useState("すべて");
   const [sortBy, setSortBy] = useState("newest");
   const [showScrollTop, setShowScrollTop] = useState(false);
-  const containerRef = useRef(null);
 
+  // 3. モーダル管理（ここも location.state から直接初期状態を作る）
+  // 編集中のアイテムがあるかどうか
+  const [editingItem, setEditingItem] = useState(
+    location.state?.selectedItem || null
+  );
+  // モーダルが開いているかどうか
+  const [isModalOpen, setIsModalOpen] = useState(
+    !!location.state?.selectedItem
+  );
+
+  // --- スクロール監視のためだけの useEffect（これは setState エラーとは無関係なのでOK） ---
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
@@ -26,6 +41,7 @@ export default function Closet({ items, setItems }) {
     return () => container.removeEventListener("scroll", handleScroll);
   }, []);
 
+  // --- ハンドラー関数 ---
   const handleSearchSubmit = (e) => {
     e.preventDefault();
     setSearchQuery(tempSearchQuery);
@@ -54,11 +70,12 @@ export default function Closet({ items, setItems }) {
     setIsModalOpen(true);
   };
 
-  const categories = [
-    "すべて",
-    ...new Set(items.map((i) => i.category).filter(Boolean)),
-  ];
+  // カテゴリー一覧の生成
+  const categories = useMemo(() => {
+    return ["すべて", ...new Set(items.map((i) => i.category).filter(Boolean))];
+  }, [items]);
 
+  // フィルタリングとソートの実行
   const filteredAndSortedItems = useMemo(() => {
     return items
       .filter((item) => {
@@ -163,6 +180,7 @@ export default function Closet({ items, setItems }) {
             </div>
           ))}
         </div>
+
         {showScrollTop && (
           <button
             className={styles.scrollTopBtn}
