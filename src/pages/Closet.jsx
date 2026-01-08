@@ -1,14 +1,19 @@
 import { useState, useEffect, useRef, useMemo } from "react";
+import { useLocation } from "react-router-dom";
 import AppLayout from "../components/layouts/AppLayout";
 import ClosetItemModal from "../components/features/ClosetItemModal";
 import styles from "./Closet.module.scss";
 
 export default function Closet({ items, setItems }) {
+  const location = useLocation();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingItem, setEditingItem] = useState(null);
   const [tempSearchQuery, setTempSearchQuery] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const [filterCategory, setFilterCategory] = useState("すべて");
+  const [archiveFilter, setArchiveFilter] = useState(
+    location.state?.defaultFilter || "すべて"
+  );
   const [sortBy, setSortBy] = useState("newest");
   const [showScrollTop, setShowScrollTop] = useState(false);
   const containerRef = useRef(null);
@@ -16,9 +21,7 @@ export default function Closet({ items, setItems }) {
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
-    const handleScroll = () => {
-      setShowScrollTop(container.scrollTop > 300);
-    };
+    const handleScroll = () => setShowScrollTop(container.scrollTop > 300);
     container.addEventListener("scroll", handleScroll);
     return () => container.removeEventListener("scroll", handleScroll);
   }, []);
@@ -51,13 +54,9 @@ export default function Closet({ items, setItems }) {
     setIsModalOpen(true);
   };
 
-  const scrollToTop = () => {
-    containerRef.current?.scrollTo({ top: 0, behavior: "smooth" });
-  };
-
   const categories = [
     "すべて",
-    ...new Set(items.map((item) => item.category).filter(Boolean)),
+    ...new Set(items.map((i) => i.category).filter(Boolean)),
   ];
 
   const filteredAndSortedItems = useMemo(() => {
@@ -65,27 +64,29 @@ export default function Closet({ items, setItems }) {
       .filter((item) => {
         const matchesCategory =
           filterCategory === "すべて" || item.category === filterCategory;
+        const matchesArchive =
+          archiveFilter === "すべて" ||
+          (archiveFilter === "クローゼット" && !item.isArchived) ||
+          (archiveFilter === "アーカイブ" && item.isArchived);
         const query = searchQuery.toLowerCase();
         const matchesSearch =
           !searchQuery ||
           item.category?.toLowerCase().includes(query) ||
           item.brand?.toLowerCase().includes(query) ||
-          item.tags?.some((tag) => tag.toLowerCase().includes(query));
-        return matchesCategory && matchesSearch;
+          item.tags?.some((t) => t.toLowerCase().includes(query));
+
+        return matchesCategory && matchesArchive && matchesSearch;
       })
       .sort((a, b) => {
-        if (sortBy === "newest")
-          return new Date(b.createdAt || 0) - new Date(a.createdAt || 0);
-        if (sortBy === "oldest")
-          return new Date(a.createdAt || 0) - new Date(b.createdAt || 0);
-        return 0;
+        const dateA = new Date(a.createdAt || 0);
+        const dateB = new Date(b.createdAt || 0);
+        return sortBy === "newest" ? dateB - dateA : dateA - dateB;
       });
-  }, [items, searchQuery, filterCategory, sortBy]);
+  }, [items, searchQuery, filterCategory, archiveFilter, sortBy]);
 
   return (
     <AppLayout title="クローゼット">
       <div className={styles.container} ref={containerRef}>
-        {/* ヘッダーエリア（パディングあり） */}
         <div className={styles.headerSection}>
           <form className={styles.searchBar} onSubmit={handleSearchSubmit}>
             <input
@@ -101,7 +102,7 @@ export default function Closet({ items, setItems }) {
 
           <div className={styles.controls}>
             <div className={styles.selectWrapper}>
-              <span className={styles.selectLabel}>絞り込み</span>
+              <span className={styles.selectLabel}>カテゴリー</span>
               <select
                 value={filterCategory}
                 onChange={(e) => setFilterCategory(e.target.value)}
@@ -114,6 +115,20 @@ export default function Closet({ items, setItems }) {
                 ))}
               </select>
             </div>
+
+            <div className={styles.selectWrapper}>
+              <span className={styles.selectLabel}>保存場所</span>
+              <select
+                value={archiveFilter}
+                onChange={(e) => setArchiveFilter(e.target.value)}
+                className={styles.ghostSelect}
+              >
+                <option value="すべて">すべて</option>
+                <option value="クローゼット">クローゼット</option>
+                <option value="アーカイブ">アーカイブ</option>
+              </select>
+            </div>
+
             <div className={styles.selectWrapper}>
               <span className={styles.selectLabel}>並び替え</span>
               <select
@@ -128,25 +143,33 @@ export default function Closet({ items, setItems }) {
           </div>
         </div>
 
-        {/* グリッドエリア（幅100%） */}
         <div className={styles.grid}>
           {filteredAndSortedItems.map((item) => (
             <div
               key={item.id}
-              className={styles.card}
+              className={`${styles.card} ${
+                item.isArchived ? styles.isArchived : ""
+              }`}
               onClick={() => handleCardClick(item)}
             >
               {item.image ? (
-                <img src={item.image} alt={item.brand} />
+                <img src={item.image} alt="" />
               ) : (
                 <div className={styles.noImage}>No Image</div>
+              )}
+              {item.isArchived && (
+                <span className={styles.archiveBadge}>ARCHIVE</span>
               )}
             </div>
           ))}
         </div>
-
         {showScrollTop && (
-          <button className={styles.scrollTopBtn} onClick={scrollToTop}>
+          <button
+            className={styles.scrollTopBtn}
+            onClick={() =>
+              containerRef.current?.scrollTo({ top: 0, behavior: "smooth" })
+            }
+          >
             ↑
           </button>
         )}

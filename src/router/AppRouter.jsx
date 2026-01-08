@@ -17,7 +17,7 @@ export default function AppRouter({
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Home items={items} />} />
+        <Route path="/" element={<Home items={items} memos={memos} />} />{" "}
         <Route
           path="/closet"
           element={<Closet items={items} deleteItem={deleteItem} />}
