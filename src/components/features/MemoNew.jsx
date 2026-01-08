@@ -34,102 +34,95 @@ export default function MemoNew({
   const handleSubmit = (e) => {
     e.preventDefault();
     const data = {
-      id: initialData?.id || `m${Date.now()}`,
+      ...initialData,
       title,
       content,
       folderId,
       image,
-      date: new Date().toLocaleDateString("ja-JP"),
     };
     onSave(data);
   };
 
-  const handleBackdropClick = (e) => {
-    if (e.target === e.currentTarget) {
-      onClose();
-    }
-  };
-
   return (
-    <div className={styles.modalOverlay} onClick={handleBackdropClick}>
-      <div className={styles.modal}>
-        <div className={styles.modalHeader}>
-          <h2>{initialData ? "メモを編集" : "新規メモ"}</h2>
-          <button onClick={onClose} className={styles.closeBtn}>
-            ✕
-          </button>
-        </div>
-
+    <div className={styles.modalOverlay} onClick={onClose}>
+      <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
         <form onSubmit={handleSubmit} className={styles.form}>
           <div className={styles.formGroup}>
-            <label>タイトル</label>
+            <label className={styles.label}>TITLE</label>
             <input
               type="text"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="タイトルを入力"
+              className={styles.input}
               required
             />
           </div>
 
           <div className={styles.formGroup}>
-            <label>フォルダ</label>
-            <select
-              value={folderId}
-              onChange={(e) => setFolderId(e.target.value)}
-            >
-              <option value="">フォルダなし</option>
-              {folders.map((folder) => (
-                <option key={folder.id} value={folder.id}>
-                  {folder.name}
-                </option>
-              ))}
-            </select>
+            <label className={styles.label}>FOLDER</label>
+            <div className={styles.selectWrapper}>
+              <select
+                value={folderId}
+                onChange={(e) => setFolderId(e.target.value)}
+                className={styles.select}
+              >
+                <option value="">フォルダを選択</option>
+                {folders.map((folder) => (
+                  <option key={folder.id} value={folder.id}>
+                    {folder.name}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
 
           <div className={styles.formGroup}>
-            <label>内容</label>
+            <label className={styles.label}>MEMO</label>
             <textarea
               value={content}
               onChange={(e) => setContent(e.target.value)}
               placeholder="メモの内容を入力"
-              rows={8}
+              className={styles.textarea}
             />
           </div>
 
-          <div className={styles.formGroup}>
-            <label>画像</label>
+          <div className={styles.imageSection}>
             <input
               type="file"
+              id="memo-image"
               accept="image/*"
               onChange={handleImageUpload}
-              className={styles.fileInput}
+              hidden
             />
+            <label htmlFor="memo-image" className={styles.imageLabel}>
+              {image ? "画像を貼り替え" : "＋ 画像を追加"}
+            </label>
             {image && (
-              <div className={styles.imagePreview}>
-                <img src={image} alt="プレビュー" />
+              <div className={styles.previewContainer}>
+                <img src={image} alt="" className={styles.preview} />
                 <button
                   type="button"
                   onClick={() => setImage(null)}
-                  className={styles.removeImageBtn}
+                  className={styles.removeBtn}
                 >
-                  画像を削除
+                  ✕
                 </button>
               </div>
             )}
           </div>
 
-          <div className={styles.modalFooter}>
+          <div className={styles.footer}>
             {initialData && (
               <button
                 type="button"
                 onClick={() => onDelete(initialData.id)}
-                className={styles.deleteBtn}
+                className={styles.deleteLink}
               >
-                削除
+                このメモを削除する
               </button>
             )}
-            <div className={styles.actionBtns}>
+            <div className={styles.buttonGroup}>
               <button
                 type="button"
                 onClick={onClose}
