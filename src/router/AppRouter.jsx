@@ -4,11 +4,13 @@ import Closet from "../pages/Closet";
 import Add from "../pages/Add";
 import Memo from "../pages/Memo";
 import Settings from "../pages/Settings";
-import SubSelect from "../pages/SubSelect"; // ← 新しく作成したページをインポート
+import SubSelect from "../pages/SubSelect";
+import ProfileEdit from "../pages/ProfileEdit";
+import CategoryEdit from "../pages/CategoryEdit";
 
 export default function AppRouter({
   items,
-  setItems, // setItems を追加（Closetでの編集保存用）
+  setItems,
   addItem,
   deleteItem,
   memos,
@@ -20,20 +22,14 @@ export default function AppRouter({
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home items={items} memos={memos} />} />
-
-        {/* クローゼットメイン画面 */}
         <Route
           path="/closet"
           element={
             <Closet items={items} setItems={setItems} deleteItem={deleteItem} />
           }
         />
-
-        {/* カテゴリー・カラー・ブランドなどの選択画面（Figma案の再現） */}
         <Route path="/closet/select" element={<SubSelect items={items} />} />
-
         <Route path="/add" element={<Add addItem={addItem} />} />
-
         <Route
           path="/memo"
           element={
@@ -45,8 +41,10 @@ export default function AppRouter({
             />
           }
         />
-
+        {/* 設定画面関連 */}
         <Route path="/settings" element={<Settings />} />
+        <Route path="/settings/profile" element={<ProfileEdit />} />
+        <Route path="/settings/category" element={<CategoryEdit />} />
       </Routes>
     </BrowserRouter>
   );

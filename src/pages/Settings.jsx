@@ -1,7 +1,10 @@
+import { useNavigate } from "react-router-dom";
 import AppLayout from "../components/layouts/AppLayout";
 import styles from "./Settings.module.scss";
 
 export default function Settings() {
+  const navigate = useNavigate();
+
   const settingsGroups = [
     {
       title: "アカウント",
@@ -9,12 +12,12 @@ export default function Settings() {
         {
           label: "プロフィール編集",
           icon: "👤",
-          action: () => alert("プロフィール編集へ"),
+          action: () => navigate("/settings/profile"),
         },
         {
           label: "メールアドレス",
           icon: "✉️",
-          action: () => alert("メール設定へ"),
+          action: () => alert("メール設定機能は準備中です"),
         },
       ],
     },
@@ -24,9 +27,13 @@ export default function Settings() {
         {
           label: "カテゴリーの編集",
           icon: "👕",
-          action: () => alert("カテゴリー編集へ"),
+          action: () => navigate("/settings/category"),
         },
-        { label: "通知設定", icon: "🔔", action: () => alert("通知設定へ") },
+        {
+          label: "通知設定",
+          icon: "🔔",
+          action: () => alert("通知設定は準備中です"),
+        },
         { label: "ダークモード", icon: "🌙", type: "toggle" },
       ],
     },
@@ -36,29 +43,33 @@ export default function Settings() {
         {
           label: "データのバックアップ",
           icon: "☁️",
-          action: () => alert("バックアップ中..."),
+          action: () => alert("バックアップ完了しました"),
         },
         {
           label: "キャッシュを削除",
           icon: "🗑️",
-          action: () => alert("削除完了"),
+          action: () => alert("キャッシュを削除しました"),
         },
         {
           label: "お問い合わせ",
           icon: "❓",
-          action: () => alert("フォームを開く"),
+          action: () => alert("ブラウザでフォームを開きます"),
         },
       ],
     },
     {
       title: "その他",
       items: [
-        { label: "利用規約", icon: "📄", action: () => alert("規約を表示") },
+        {
+          label: "利用規約",
+          icon: "📄",
+          action: () => alert("利用規約を表示します"),
+        },
         {
           label: "ログアウト",
           icon: "🚪",
           color: "#ff4d4f",
-          action: () => alert("ログアウトしますか？"),
+          action: () => confirm("ログアウトしますか？"),
         },
       ],
     },
@@ -81,7 +92,10 @@ export default function Settings() {
                   <span className={styles.icon}>{item.icon}</span>
                   <span className={styles.label}>{item.label}</span>
                   {item.type === "toggle" ? (
-                    <div className={styles.toggle}>
+                    <div
+                      className={styles.toggle}
+                      onClick={(e) => e.stopPropagation()}
+                    >
                       <input type="checkbox" id={`toggle-${gIdx}-${iIdx}`} />
                       <label htmlFor={`toggle-${gIdx}-${iIdx}`}></label>
                     </div>

@@ -1,0 +1,82 @@
+.container {
+  padding: 20px;
+  background: #fff;
+  min-height: 100%;
+}
+
+.addSection {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 30px;
+
+  input {
+    flex: 1;
+    padding: 12px;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    background: #f9f9f9;
+  }
+
+  button {
+    padding: 0 20px;
+    background: #000;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+  }
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  border-top: 1px solid #eee;
+
+  .item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 0;
+    border-bottom: 1px solid #eee;
+
+    span {
+      font-size: 1rem;
+      color: #333;
+    }
+
+    .deleteBtn {
+      background: none;
+      border: none;
+      color: #ff4d4f;
+      font-size: 0.9rem;
+      cursor: pointer;
+    }
+  }
+}
+
+.hint {
+  margin-top: 20px;
+  font-size: 0.75rem;
+  color: #999;
+  line-height: 1.5;
+}
+
+.actionArea {
+  margin-top: 40px;
+  display: flex;
+  justify-content: center;
+}
+
+.backBtn {
+  width: 100%;
+  padding: 14px;
+  background: #fff;
+  color: #333;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  &:hover {
+    background: #fafafa;
+  }
+}
