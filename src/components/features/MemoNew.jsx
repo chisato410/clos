@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import styles from "./MemoNew.module.scss";
 
 export default function MemoNew({
@@ -8,19 +8,10 @@ export default function MemoNew({
   onDelete,
   onClose,
 }) {
-  const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
-  const [folderId, setFolderId] = useState("");
-  const [image, setImage] = useState(null);
-
-  useEffect(() => {
-    if (initialData) {
-      setTitle(initialData.title || "");
-      setContent(initialData.content || "");
-      setFolderId(initialData.folderId || "");
-      setImage(initialData.image || null);
-    }
-  }, [initialData]);
+  const [title, setTitle] = useState(initialData?.title || "");
+  const [content, setContent] = useState(initialData?.content || "");
+  const [folderId, setFolderId] = useState(initialData?.folderId || "");
+  const [image, setImage] = useState(initialData?.image || null);
 
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
