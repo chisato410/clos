@@ -8,31 +8,45 @@ export default function Closet({ items, setItems }) {
   const location = useLocation();
   const containerRef = useRef(null);
 
-  // --- 修正の鍵：useEffectを使わず、location.stateから直接変数を定義する ---
+  // --- location.state から初期状態を定義 ---
 
-  // 1. 保存場所フィルタ（useStateの初期値としてlocation.stateを使用）
+  // 1. 保存場所フィルタ（アーカイブなど）
   const [archiveFilter, setArchiveFilter] = useState(
     location.state?.defaultFilter || "すべて"
   );
 
-  // 2. 検索・ソート状態
-  const [tempSearchQuery, setTempSearchQuery] = useState("");
-  const [searchQuery, setSearchQuery] = useState("");
-  const [filterCategory, setFilterCategory] = useState("すべて");
+  // 2. ★重要：SubSelect から渡されたフィルタ値（カテゴリー、ブランド、カラーなど）を初期セット
+  const [filterCategory, setFilterCategory] = useState(
+    location.state?.filterType === "category"
+      ? location.state.filterValue
+      : "すべて"
+  );
+
+  // 3. 検索ワード（カテゴリー以外のフィルタ値は検索クエリとしてセット）
+  const [tempSearchQuery, setTempSearchQuery] = useState(
+    location.state?.filterType !== "category"
+      ? location.state?.filterValue || ""
+      : ""
+  );
+  const [searchQuery, setSearchQuery] = useState(
+    location.state?.filterType !== "category"
+      ? location.state?.filterValue || ""
+      : ""
+  );
+
+  // 4. その他の状態
   const [sortBy, setSortBy] = useState("newest");
   const [showScrollTop, setShowScrollTop] = useState(false);
 
-  // 3. モーダル管理（ここも location.state から直接初期状態を作る）
-  // 編集中のアイテムがあるかどうか
+  // 5. モーダル管理
   const [editingItem, setEditingItem] = useState(
     location.state?.selectedItem || null
   );
-  // モーダルが開いているかどうか
   const [isModalOpen, setIsModalOpen] = useState(
     !!location.state?.selectedItem
   );
 
-  // --- スクロール監視のためだけの useEffect（これは setState エラーとは無関係なのでOK） ---
+  // スクロール監視
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
@@ -41,7 +55,7 @@ export default function Closet({ items, setItems }) {
     return () => container.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // --- ハンドラー関数 ---
+  // ハンドラー
   const handleSearchSubmit = (e) => {
     e.preventDefault();
     setSearchQuery(tempSearchQuery);
@@ -79,17 +93,24 @@ export default function Closet({ items, setItems }) {
   const filteredAndSortedItems = useMemo(() => {
     return items
       .filter((item) => {
+        // カテゴリー一致
         const matchesCategory =
           filterCategory === "すべて" || item.category === filterCategory;
+
+        // 保存場所（クローゼット/アーカイブ）一致
         const matchesArchive =
           archiveFilter === "すべて" ||
           (archiveFilter === "クローゼット" && !item.isArchived) ||
           (archiveFilter === "アーカイブ" && item.isArchived);
+
+        // 検索ワード一致（ブランド、タグ、カラー、メモなど広範囲をカバー）
         const query = searchQuery.toLowerCase();
         const matchesSearch =
           !searchQuery ||
           item.category?.toLowerCase().includes(query) ||
           item.brand?.toLowerCase().includes(query) ||
+          item.color?.toLowerCase().includes(query) || // カラー検索を追加
+          item.genre?.toLowerCase().includes(query) || // ジャンル検索を追加
           item.tags?.some((t) => t.toLowerCase().includes(query));
 
         return matchesCategory && matchesArchive && matchesSearch;
@@ -160,25 +181,46 @@ export default function Closet({ items, setItems }) {
           </div>
         </div>
 
-        <div className={styles.grid}>
-          {filteredAndSortedItems.map((item) => (
-            <div
-              key={item.id}
-              className={`${styles.card} ${
-                item.isArchived ? styles.isArchived : ""
-              }`}
-              onClick={() => handleCardClick(item)}
+        {/* フィルタ値が表示されている場合にリセットできるボタン（任意） */}
+        {(filterCategory !== "すべて" || searchQuery !== "") && (
+          <div className={styles.filterStatus}>
+            絞り込み中:{" "}
+            {filterCategory !== "すべて" ? filterCategory : searchQuery}
+            <button
+              onClick={() => {
+                setFilterCategory("すべて");
+                setSearchQuery("");
+                setTempSearchQuery("");
+              }}
             >
-              {item.image ? (
-                <img src={item.image} alt="" />
-              ) : (
-                <div className={styles.noImage}>No Image</div>
-              )}
-              {item.isArchived && (
-                <span className={styles.archiveBadge}>ARCHIVE</span>
-              )}
-            </div>
-          ))}
+              解除
+            </button>
+          </div>
+        )}
+
+        <div className={styles.grid}>
+          {filteredAndSortedItems.length > 0 ? (
+            filteredAndSortedItems.map((item) => (
+              <div
+                key={item.id}
+                className={`${styles.card} ${
+                  item.isArchived ? styles.isArchived : ""
+                }`}
+                onClick={() => handleCardClick(item)}
+              >
+                {item.image ? (
+                  <img src={item.image} alt="" />
+                ) : (
+                  <div className={styles.noImage}>No Image</div>
+                )}
+                {item.isArchived && (
+                  <span className={styles.archiveBadge}>ARCHIVE</span>
+                )}
+              </div>
+            ))
+          ) : (
+            <div className={styles.emptyMsg}>該当する服がありません</div>
+          )}
         </div>
 
         {showScrollTop && (
