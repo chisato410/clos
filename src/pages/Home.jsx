@@ -38,8 +38,6 @@ export default function Home({ items = [], memos = [] }) {
   return (
     <AppLayout title="ホーム">
       <div className={styles.container}>
-        <div className={styles.logoArea}>clos</div>
-
         <div className={styles.searchWrapper}>
           <div className={styles.searchBar}>
             <span className={styles.searchIcon}>🔍</span>
