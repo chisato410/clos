@@ -1,7 +1,10 @@
+@use "../styles/variables" as v; // _variables.scssをインポート
+
 .container {
-  background: #f8f8f8;
+  background: v.$theme-bg; // 背景色もテーマ連動
   min-height: 100%;
   padding-bottom: 40px;
+  transition: background v.$transition;
 }
 
 .group {
@@ -16,6 +19,44 @@
   }
 }
 
+// --- カラーセレクター用のスタイル ---
+.colorGridWrapper {
+  background: #fff;
+  padding: 20px;
+  border-top: 1px solid #eee;
+  border-bottom: 1px solid #eee;
+}
+
+.colorGrid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  justify-content: flex-start;
+}
+
+.colorCircle {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition:
+    transform 0.2s,
+    border-color 0.2s;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+  &:active {
+    transform: scale(0.9);
+  }
+
+  &.active {
+    border-color: #333; // 選択中の枠線
+    transform: scale(1.15);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  }
+}
+
+// --- 共通リストスタイル ---
 .list {
   background: #fff;
   border-top: 1px solid #eee;
@@ -56,12 +97,12 @@
   }
 }
 
-// 簡単なトグルスイッチのスタイル
+// --- トグルスイッチ（チェック時の色をメインカラーと連動） ---
 .toggle {
   input {
     display: none;
     &:checked + label {
-      background: #4cd964;
+      background: v.$primary; // ここをテーマカラーに変更！
       &::after {
         transform: translateX(20px);
       }

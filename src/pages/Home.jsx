@@ -78,7 +78,6 @@ export default function Home({ items = [], memos = [] }) {
 
         {/* 探すセクション */}
         <div className={styles.findSection}>
-          <h3 className={styles.sectionTitle}>探す</h3>
           <div className={styles.iconGrid}>
             {searchCategories.map((item, index) => (
               <div

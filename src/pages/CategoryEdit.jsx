@@ -1,24 +1,15 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom"; // navigateを追加
+import { useNavigate } from "react-router-dom";
 import AppLayout from "../components/layouts/AppLayout";
 import styles from "./CategoryEdit.module.scss";
 
-export default function CategoryEdit() {
+export default function CategoryEdit({ categories, setCategories }) {
   const navigate = useNavigate();
-  const [categories, setCategories] = useState([
-    "トップス",
-    "ボトムス",
-    "ワンピース",
-    "アウター",
-    "シューズ",
-    "バッグ",
-    "アクセサリー",
-  ]);
   const [newCategory, setNewCategory] = useState("");
 
   const handleAdd = (e) => {
     e.preventDefault();
-    if (newCategory.trim() && !categories.includes(newCategory)) {
+    if (newCategory.trim() && !categories.includes(newCategory.trim())) {
       setCategories([...categories, newCategory.trim()]);
       setNewCategory("");
     }
@@ -42,7 +33,7 @@ export default function CategoryEdit() {
             type="text"
             value={newCategory}
             onChange={(e) => setNewCategory(e.target.value)}
-            placeholder="新しいカテゴリー"
+            placeholder="新しいカテゴリー（例：帽子）"
           />
           <button type="submit" disabled={!newCategory.trim()}>
             追加
@@ -64,11 +55,6 @@ export default function CategoryEdit() {
           ))}
         </div>
 
-        <div className={styles.footerInfo}>
-          ※削除しても登録済みの服のデータは消えません。
-        </div>
-
-        {/* 戻るボタンの追加 */}
         <div className={styles.actionArea}>
           <button className={styles.backBtn} onClick={() => navigate(-1)}>
             設定画面に戻る

@@ -2,10 +2,21 @@ import { useNavigate } from "react-router-dom";
 import AppLayout from "../components/layouts/AppLayout";
 import styles from "./Settings.module.scss";
 
-export default function Settings() {
+// currentTheme, setCurrentTheme, themes を Props として受け取る
+export default function Settings({ currentTheme, setCurrentTheme, themes }) {
   const navigate = useNavigate();
 
+  // App.jsx の themes オブジェクトからカラーオプションのリストを生成
+  const colorOptions = Object.keys(themes).map((key) => ({
+    id: key,
+    color: themes[key].primary,
+  }));
+
   const settingsGroups = [
+    {
+      title: "テーマカラー",
+      type: "colorPicker", // カラーグリッド表示用の特殊タイプ
+    },
     {
       title: "アカウント",
       items: [
@@ -81,30 +92,50 @@ export default function Settings() {
         {settingsGroups.map((group, gIdx) => (
           <div key={gIdx} className={styles.group}>
             <h3 className={styles.groupTitle}>{group.title}</h3>
-            <div className={styles.list}>
-              {group.items.map((item, iIdx) => (
-                <div
-                  key={iIdx}
-                  className={styles.item}
-                  onClick={item.action}
-                  style={{ color: item.color || "inherit" }}
-                >
-                  <span className={styles.icon}>{item.icon}</span>
-                  <span className={styles.label}>{item.label}</span>
-                  {item.type === "toggle" ? (
+
+            {/* カラーピッカーセクションのレンダリング */}
+            {group.type === "colorPicker" ? (
+              <div className={styles.colorGridWrapper}>
+                <div className={styles.colorGrid}>
+                  {colorOptions.map((opt) => (
                     <div
-                      className={styles.toggle}
-                      onClick={(e) => e.stopPropagation()}
-                    >
-                      <input type="checkbox" id={`toggle-${gIdx}-${iIdx}`} />
-                      <label htmlFor={`toggle-${gIdx}-${iIdx}`}></label>
-                    </div>
-                  ) : (
-                    <span className={styles.arrow}>＞</span>
-                  )}
+                      key={opt.id}
+                      className={`${styles.colorCircle} ${
+                        currentTheme === opt.id ? styles.active : ""
+                      }`}
+                      style={{ backgroundColor: opt.color }}
+                      onClick={() => setCurrentTheme(opt.id)}
+                    />
+                  ))}
                 </div>
-              ))}
-            </div>
+              </div>
+            ) : (
+              /* 通常のリストアイテムのレンダリング */
+              <div className={styles.list}>
+                {group.items.map((item, iIdx) => (
+                  <div
+                    key={iIdx}
+                    className={styles.item}
+                    onClick={item.action}
+                    style={{ color: item.color || "inherit" }}
+                  >
+                    <span className={styles.icon}>{item.icon}</span>
+                    <span className={styles.label}>{item.label}</span>
+                    {item.type === "toggle" ? (
+                      <div
+                        className={styles.toggle}
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <input type="checkbox" id={`toggle-${gIdx}-${iIdx}`} />
+                        <label htmlFor={`toggle-${gIdx}-${iIdx}`}></label>
+                      </div>
+                    ) : (
+                      <span className={styles.arrow}>＞</span>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         ))}
         <div className={styles.version}>Version 1.0.0</div>

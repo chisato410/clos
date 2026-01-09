@@ -17,6 +17,12 @@ export default function AppRouter({
   setMemos,
   folders,
   setFolders,
+  currentTheme,
+  setCurrentTheme,
+  themes,
+  // --- カテゴリー関連のPropsを追加 ---
+  categories,
+  setCategories,
 }) {
   return (
     <BrowserRouter>
@@ -29,7 +35,13 @@ export default function AppRouter({
           }
         />
         <Route path="/closet/select" element={<SubSelect items={items} />} />
-        <Route path="/add" element={<Add addItem={addItem} />} />
+
+        {/* 服の追加画面にカテゴリー情報を渡す */}
+        <Route
+          path="/add"
+          element={<Add addItem={addItem} categories={categories} />}
+        />
+
         <Route
           path="/memo"
           element={
@@ -41,10 +53,31 @@ export default function AppRouter({
             />
           }
         />
-        {/* 設定画面関連 */}
-        <Route path="/settings" element={<Settings />} />
+
+        {/* --- 設定画面関連 --- */}
+        <Route
+          path="/settings"
+          element={
+            <Settings
+              currentTheme={currentTheme}
+              setCurrentTheme={setCurrentTheme}
+              themes={themes}
+            />
+          }
+        />
+
         <Route path="/settings/profile" element={<ProfileEdit />} />
-        <Route path="/settings/category" element={<CategoryEdit />} />
+
+        {/* カテゴリー編集画面にデータと更新関数を渡す */}
+        <Route
+          path="/settings/category"
+          element={
+            <CategoryEdit
+              categories={categories}
+              setCategories={setCategories}
+            />
+          }
+        />
       </Routes>
     </BrowserRouter>
   );

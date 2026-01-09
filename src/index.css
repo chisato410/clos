@@ -1,3 +1,12 @@
+:root {
+  --primary-color: #6a8caf;
+  --theme-bg: #f8f8f8;
+  --header-text: #ffffff;
+}
+
 body {
+  background-color: var(--theme-bg);
+  color: #333;
+  transition: background-color 0.3s ease;
   margin: 0;
 }

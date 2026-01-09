@@ -3,16 +3,7 @@ import { useNavigate } from "react-router-dom";
 import AppLayout from "../components/layouts/AppLayout";
 import styles from "./Add.module.scss";
 
-const CATEGORIES = [
-  "トップス",
-  "ボトムス",
-  "ワンピース",
-  "アウター",
-  "シューズ",
-  "バッグ",
-  "アクセサリー",
-  "その他",
-];
+// CATEGORIES は Props から受け取るため削除しました
 
 const GENRES = [
   "カジュアル",
@@ -42,7 +33,8 @@ const COLORS = [
   "その他",
 ];
 
-export default function Add({ addItem }) {
+// AppRouter から categories を Props として受け取ります
+export default function Add({ addItem, categories = [] }) {
   const navigate = useNavigate();
   const [image, setImage] = useState(null);
   const [category, setCategory] = useState("");
@@ -129,7 +121,7 @@ export default function Add({ addItem }) {
             )}
           </div>
 
-          {/* カテゴリー */}
+          {/* カテゴリー (Props の categories を使用) */}
           <div className={styles.formGroup}>
             <label>カテゴリー</label>
             <select
@@ -138,7 +130,7 @@ export default function Add({ addItem }) {
               required
             >
               <option value="">選択する</option>
-              {CATEGORIES.map((cat) => (
+              {categories.map((cat) => (
                 <option key={cat} value={cat}>
                   {cat}
                 </option>

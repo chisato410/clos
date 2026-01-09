@@ -1,9 +1,4 @@
 .container {
-  background: #fff;
-  padding-bottom: 80px;
-}
-
-.container {
   height: 100%;
   background-color: #fff;
   overflow-y: auto;
@@ -20,7 +15,7 @@
 }
 
 .searchWrapper {
-  padding: 0 16px 24px;
+  padding: 16px 24px;
   .searchBar {
     display: flex;
     align-items: center;
