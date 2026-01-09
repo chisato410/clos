@@ -14,6 +14,12 @@ import imgColor5 from "./assets/themes/color5.webp";
 
 // 1. カラーテーマの定義 (Figmaのデザイン案に基づいたパレット)
 const themes = {
+  default: {
+    primary: "#6a8caf",
+    bg: "#f8f8f8",
+    headerText: "#ffffff",
+    preview: null,
+  },
   black: {
     primary: "#333333",
     bg: "#f0f0f0",

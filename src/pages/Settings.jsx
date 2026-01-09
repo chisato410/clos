@@ -5,12 +5,20 @@ import styles from "./Settings.module.scss";
 export default function Settings({ currentTheme, setCurrentTheme, themes }) {
   const navigate = useNavigate();
 
-  // themes オブジェクトから情報を抽出（preview画像を追加）
-  const colorOptions = Object.keys(themes).map((key) => ({
-    id: key,
-    color: themes[key].primary,
-    preview: themes[key].preview, // App.jsxで設定した画像パス
-  }));
+  // テーマを初期状態に戻す関数
+  const handleReset = () => {
+    if (confirm("テーマカラーを初期状態に戻しますか？")) {
+      setCurrentTheme("default");
+    }
+  };
+
+  const colorOptions = Object.keys(themes)
+    .filter((key) => key !== "default") // "default" を一覧から隠す
+    .map((key) => ({
+      id: key,
+      color: themes[key].primary,
+      preview: themes[key].preview,
+    }));
 
   const settingsGroups = [
     {
@@ -91,7 +99,15 @@ export default function Settings({ currentTheme, setCurrentTheme, themes }) {
       <div className={styles.container}>
         {settingsGroups.map((group, gIdx) => (
           <div key={gIdx} className={styles.group}>
-            <h3 className={styles.groupTitle}>{group.title}</h3>
+            {/* ヘッダー部分をリセットボタン対応に変更 */}
+            <div className={styles.groupHeader}>
+              <h3 className={styles.groupTitle}>{group.title}</h3>
+              {group.type === "colorPicker" && (
+                <button className={styles.resetBtn} onClick={handleReset}>
+                  リセット
+                </button>
+              )}
+            </div>
 
             {group.type === "colorPicker" ? (
               <div className={styles.colorGridWrapper}>
@@ -104,7 +120,6 @@ export default function Settings({ currentTheme, setCurrentTheme, themes }) {
                       }`}
                       onClick={() => setCurrentTheme(opt.id)}
                     >
-                      {/* 背景色の代わりに画像を表示 */}
                       <img
                         src={opt.preview}
                         alt={opt.id}
