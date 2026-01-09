@@ -1,15 +1,79 @@
 import { useState, useEffect } from "react";
 import AppRouter from "./router/AppRouter";
 
+import imgRed from "./assets/themes/red.webp";
+import imgYellow from "./assets/themes/yellow.webp";
+import imgBlack from "./assets/themes/black.webp";
+import imgBlue from "./assets/themes/blue.webp";
+import imgGreen from "./assets/themes/green.webp";
+import imgColor1 from "./assets/themes/color1.webp";
+import imgColor2 from "./assets/themes/color2.webp";
+import imgColor3 from "./assets/themes/color3.webp";
+import imgColor4 from "./assets/themes/color4.webp";
+import imgColor5 from "./assets/themes/color5.webp";
+
 // 1. カラーテーマの定義 (Figmaのデザイン案に基づいたパレット)
 const themes = {
-  default: { primary: "#6A8CAF", bg: "#f8f8f8", headerText: "#ffffff" },
-  red: { primary: "#EB5757", bg: "#fff5f5", headerText: "#ffffff" },
-  yellow: { primary: "#F2C94C", bg: "#fffdf5", headerText: "#ffffff" },
-  green: { primary: "#27AE60", bg: "#f2faf5", headerText: "#ffffff" },
-  blue: { primary: "#2F80ED", bg: "#f0f5ff", headerText: "#ffffff" },
-  black: { primary: "#333333", bg: "#ffffff", headerText: "#ffffff" },
-  pink: { primary: "#EF9A9A", bg: "#fff9f9", headerText: "#ffffff" },
+  black: {
+    primary: "#333333",
+    bg: "#f0f0f0",
+    headerText: "#ffffff",
+    preview: imgBlack,
+  },
+  red: {
+    primary: "#EB5757",
+    bg: "#fff5f5",
+    headerText: "#ffffff",
+    preview: imgRed,
+  },
+  yellow: {
+    primary: "#F2C94C",
+    bg: "#fffdf5",
+    headerText: "#ffffff",
+    preview: imgYellow,
+  },
+  blue: {
+    primary: "#2D9CDB",
+    bg: "#f5fbff",
+    headerText: "#ffffff",
+    preview: imgBlue,
+  },
+  green: {
+    primary: "#27AE60",
+    bg: "#f5fff7",
+    headerText: "#ffffff",
+    preview: imgGreen,
+  },
+  color1: {
+    primary: "#BB6BD9",
+    bg: "#faf5ff",
+    headerText: "#ffffff",
+    preview: imgColor1,
+  },
+  color2: {
+    primary: "#9B51E0",
+    bg: "#f6f0ff",
+    headerText: "#ffffff",
+    preview: imgColor2,
+  },
+  color3: {
+    primary: "#56CCF2",
+    bg: "#f0faff",
+    headerText: "#ffffff",
+    preview: imgColor3,
+  },
+  color4: {
+    primary: "#6FCF97",
+    bg: "#f0fffa",
+    headerText: "#ffffff",
+    preview: imgColor4,
+  },
+  color5: {
+    primary: "#FF6B6B",
+    bg: "#fff5f5",
+    headerText: "#ffffff",
+    preview: imgColor5,
+  },
 };
 
 export default function App() {

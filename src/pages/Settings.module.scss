@@ -1,7 +1,7 @@
-@use "../styles/variables" as v; // _variables.scssをインポート
+@use "../styles/variables" as v;
 
 .container {
-  background: v.$theme-bg; // 背景色もテーマ連動
+  background: v.$theme-bg;
   min-height: 100%;
   padding-bottom: 40px;
   transition: background v.$transition;
@@ -19,7 +19,7 @@
   }
 }
 
-// --- カラーセレクター用のスタイル ---
+// --- カラーセレクター用のスタイル (画像対応版) ---
 .colorGridWrapper {
   background: #fff;
   padding: 20px;
@@ -35,25 +35,37 @@
 }
 
 .colorCircle {
-  width: 34px;
-  height: 34px;
+  width: 50px; // 画像が見やすいようサイズを大きく調整
+  height: 50px;
   border-radius: 50%;
   cursor: pointer;
-  border: 2px solid transparent;
+  border: 2px solid #eee; // 未選択時の境界線を少し見えやすく
+  position: relative;
+  overflow: hidden; // ★重要：画像を円形に切り抜く
   transition:
     transform 0.2s,
     border-color 0.2s;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: flex; // 中の画像を中央に配置
+  align-items: center;
+  justify-content: center;
 
   &:active {
-    transform: scale(0.9);
+    transform: scale(0.95);
   }
 
   &.active {
-    border-color: #333; // 選択中の枠線
-    transform: scale(1.15);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    border-color: #333; // 選択中の枠線をはっきりさせる
+    transform: scale(1.1);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
   }
+}
+
+// 追加：画像自体の表示設定
+.themeImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; // ★重要：バラバラなサイズの画像も円形にフィットさせる
 }
 
 // --- 共通リストスタイル ---
@@ -97,12 +109,12 @@
   }
 }
 
-// --- トグルスイッチ（チェック時の色をメインカラーと連動） ---
+// --- トグルスイッチ ---
 .toggle {
   input {
     display: none;
     &:checked + label {
-      background: v.$primary; // ここをテーマカラーに変更！
+      background: v.$primary;
       &::after {
         transform: translateX(20px);
       }

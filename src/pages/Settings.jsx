@@ -2,20 +2,20 @@ import { useNavigate } from "react-router-dom";
 import AppLayout from "../components/layouts/AppLayout";
 import styles from "./Settings.module.scss";
 
-// currentTheme, setCurrentTheme, themes を Props として受け取る
 export default function Settings({ currentTheme, setCurrentTheme, themes }) {
   const navigate = useNavigate();
 
-  // App.jsx の themes オブジェクトからカラーオプションのリストを生成
+  // themes オブジェクトから情報を抽出（preview画像を追加）
   const colorOptions = Object.keys(themes).map((key) => ({
     id: key,
     color: themes[key].primary,
+    preview: themes[key].preview, // App.jsxで設定した画像パス
   }));
 
   const settingsGroups = [
     {
       title: "テーマカラー",
-      type: "colorPicker", // カラーグリッド表示用の特殊タイプ
+      type: "colorPicker",
     },
     {
       title: "アカウント",
@@ -93,7 +93,6 @@ export default function Settings({ currentTheme, setCurrentTheme, themes }) {
           <div key={gIdx} className={styles.group}>
             <h3 className={styles.groupTitle}>{group.title}</h3>
 
-            {/* カラーピッカーセクションのレンダリング */}
             {group.type === "colorPicker" ? (
               <div className={styles.colorGridWrapper}>
                 <div className={styles.colorGrid}>
@@ -103,14 +102,19 @@ export default function Settings({ currentTheme, setCurrentTheme, themes }) {
                       className={`${styles.colorCircle} ${
                         currentTheme === opt.id ? styles.active : ""
                       }`}
-                      style={{ backgroundColor: opt.color }}
                       onClick={() => setCurrentTheme(opt.id)}
-                    />
+                    >
+                      {/* 背景色の代わりに画像を表示 */}
+                      <img
+                        src={opt.preview}
+                        alt={opt.id}
+                        className={styles.themeImage}
+                      />
+                    </div>
                   ))}
                 </div>
               </div>
             ) : (
-              /* 通常のリストアイテムのレンダリング */
               <div className={styles.list}>
                 {group.items.map((item, iIdx) => (
                   <div
