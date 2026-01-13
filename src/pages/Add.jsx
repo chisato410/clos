@@ -1,9 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import heic2any from "heic2any";
 import AppLayout from "../components/layouts/AppLayout";
 import styles from "./Add.module.scss";
-
-// CATEGORIES は Props から受け取るため削除しました
 
 const GENRES = [
   "カジュアル",
@@ -33,10 +32,10 @@ const COLORS = [
   "その他",
 ];
 
-// AppRouter から categories を Props として受け取ります
 export default function Add({ addItem, categories = [] }) {
   const navigate = useNavigate();
   const [image, setImage] = useState(null);
+  const [isConverting, setIsConverting] = useState(false);
   const [category, setCategory] = useState("");
   const [genre, setGenre] = useState("");
   const [size, setSize] = useState("");
@@ -48,12 +47,43 @@ export default function Add({ addItem, categories = [] }) {
   const [isArchived, setIsArchived] = useState(false);
   const [memo, setMemo] = useState("");
 
-  const handleImageUpload = (e) => {
+  const handleImageUpload = async (e) => {
     const file = e.target.files[0];
-    if (file) {
+    if (!file) return;
+
+    setIsConverting(true);
+
+    try {
+      let processedFile = file;
+
+      // HEICファイルの場合はJPEGに変換
+      if (
+        file.type === "image/heic" ||
+        file.name.toLowerCase().endsWith(".heic")
+      ) {
+        const convertedBlob = await heic2any({
+          blob: file,
+          toType: "image/jpeg",
+          quality: 0.8,
+        });
+        processedFile = convertedBlob;
+      }
+
+      // プレビュー表示
       const reader = new FileReader();
-      reader.onload = (e) => setImage(e.target.result);
-      reader.readAsDataURL(file);
+      reader.onload = (e) => {
+        setImage(e.target.result);
+        setIsConverting(false);
+      };
+      reader.onerror = () => {
+        alert("画像の読み込みに失敗しました");
+        setIsConverting(false);
+      };
+      reader.readAsDataURL(processedFile);
+    } catch (error) {
+      console.error("画像変換エラー:", error);
+      alert("画像の変換に失敗しました。別の画像を選択してください。");
+      setIsConverting(false);
     }
   };
 
@@ -95,7 +125,11 @@ export default function Add({ addItem, categories = [] }) {
           {/* 画像アップロード */}
           <div className={styles.imageSection}>
             <label className={styles.imageUpload}>
-              {image ? (
+              {isConverting ? (
+                <div className={styles.uploadPlaceholder}>
+                  <span>変換中...</span>
+                </div>
+              ) : image ? (
                 <img src={image} alt="プレビュー" />
               ) : (
                 <div className={styles.uploadPlaceholder}>
@@ -105,9 +139,10 @@ export default function Add({ addItem, categories = [] }) {
               )}
               <input
                 type="file"
-                accept="image/*"
+                accept="image/*,.heic"
                 onChange={handleImageUpload}
                 style={{ display: "none" }}
+                disabled={isConverting}
               />
             </label>
             {image && (
@@ -121,7 +156,7 @@ export default function Add({ addItem, categories = [] }) {
             )}
           </div>
 
-          {/* カテゴリー (Props の categories を使用) */}
+          {/* カテゴリー */}
           <div className={styles.formGroup}>
             <label>カテゴリー</label>
             <select
