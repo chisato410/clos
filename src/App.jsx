@@ -17,7 +17,7 @@ const themes = {
   default: {
     primary: "#6a8caf",
     bg: "#f8f8f8",
-    accent: "#6a8caf",
+    accent: "#000000",
     preview: null,
     logoFilter: "invert(0)",
   },
