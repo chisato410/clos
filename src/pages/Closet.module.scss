@@ -141,6 +141,7 @@
   font-size: 14px;
   cursor: pointer;
   transition: all 0.2s;
+  margin-left: 10px;
 
   &:hover {
     border-color: #999;
@@ -150,4 +151,8 @@
   &:active {
     transform: scale(0.95);
   }
+}
+
+.filterStatus {
+  padding: 20px 0;
 }
