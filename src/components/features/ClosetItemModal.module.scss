@@ -1,5 +1,4 @@
 .modalOverlay {
-  // ★重要: 親要素に左右パディングがあっても無視して画面全体を覆う
   position: fixed;
   top: 0;
   left: 0;
@@ -9,15 +8,11 @@
   height: 100dvh;
   background-color: rgba(0, 0, 0, 0.6);
 
-  // 完全中央寄せ
   display: flex;
   justify-content: center;
   align-items: center;
-
-  // 他の要素より確実に上に
   z-index: 999999;
 
-  // スマホで端にひっつかないよう余白を確保
   padding: 16px;
   box-sizing: border-box;
 }
@@ -26,7 +21,6 @@
   background: #fff;
   width: 100%;
   max-width: 480px;
-  // 画面の上下に見切れが発生しない高さに固定
   max-height: calc(100dvh - 32px);
   border-radius: 20px;
   display: flex;
@@ -34,7 +28,6 @@
   overflow: hidden;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
 
-  // ★右ズレ防止の決定打
   margin: 0 auto;
   position: relative;
 }
@@ -69,9 +62,9 @@
 
 .form {
   flex: 1;
-  min-height: 0; // スクロールを機能させるための指定
+  min-height: 0;
   padding: 24px 20px;
-  overflow-y: auto; // 中身が長い時だけスクロール
+  overflow-y: auto;
   -webkit-overflow-scrolling: touch;
 
   .imageSection {

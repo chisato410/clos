@@ -56,9 +56,12 @@ export default function CategoryEdit({ categories, setCategories }) {
         </div>
 
         <div className={styles.actionArea}>
-          <button className={styles.backBtn} onClick={() => navigate(-1)}>
+          <button
+            className={styles.backBtn}
+            onClick={() => navigate("/settings")}
+          >
             設定画面に戻る
-          </button>
+          </button>{" "}
         </div>
       </div>
     </AppLayout>
