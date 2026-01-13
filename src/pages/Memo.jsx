@@ -2,6 +2,7 @@ import { useState, useMemo } from "react";
 import AppLayout from "../components/layouts/AppLayout";
 import MemoNew from "../components/features/MemoNew";
 import styles from "./Memo.module.scss";
+import searchIconImg from "../assets/search.webp";
 
 export default function Memo({
   memos = [],
@@ -79,7 +80,7 @@ export default function Memo({
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
-            <span className={styles.searchIcon}>🔍</span>
+            <img src={searchIconImg} alt="検索" className={styles.searchIcon} />
           </div>
 
           <button
