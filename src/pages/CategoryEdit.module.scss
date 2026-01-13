@@ -1,7 +1,13 @@
+@use "../styles/variables" as v;
+
 .container {
   padding: 20px;
   background: #fff;
   min-height: 100%;
+}
+
+.description {
+  padding: 10px 0;
 }
 
 .addSection {
@@ -19,7 +25,7 @@
 
   button {
     padding: 0 20px;
-    background: #000;
+    background: v.$primary;
     color: #fff;
     border: none;
     border-radius: 8px;
