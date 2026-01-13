@@ -187,6 +187,7 @@ export default function Closet({ items, setItems }) {
             絞り込み中:{" "}
             {filterCategory !== "すべて" ? filterCategory : searchQuery}
             <button
+              className={styles.clearFilterBtn}
               onClick={() => {
                 setFilterCategory("すべて");
                 setSearchQuery("");
