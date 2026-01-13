@@ -13,7 +13,7 @@ export default function Settings({ currentTheme, setCurrentTheme, themes }) {
   };
 
   const colorOptions = Object.keys(themes)
-    .filter((key) => key !== "default") // "default" を一覧から隠す
+    .filter((key) => key !== "default")
     .map((key) => ({
       id: key,
       color: themes[key].primary,
@@ -22,25 +22,6 @@ export default function Settings({ currentTheme, setCurrentTheme, themes }) {
 
   const settingsGroups = [
     {
-      title: "テーマカラー",
-      type: "colorPicker",
-    },
-    {
-      title: "アカウント",
-      items: [
-        {
-          label: "プロフィール編集",
-          icon: "👤",
-          action: () => navigate("/settings/profile"),
-        },
-        {
-          label: "メールアドレス",
-          icon: "✉️",
-          action: () => alert("メール設定機能は準備中です"),
-        },
-      ],
-    },
-    {
       title: "アプリ設定",
       items: [
         {
@@ -48,49 +29,11 @@ export default function Settings({ currentTheme, setCurrentTheme, themes }) {
           icon: "👕",
           action: () => navigate("/settings/category"),
         },
-        {
-          label: "通知設定",
-          icon: "🔔",
-          action: () => alert("通知設定は準備中です"),
-        },
-        { label: "ダークモード", icon: "🌙", type: "toggle" },
       ],
     },
     {
-      title: "データ・サポート",
-      items: [
-        {
-          label: "データのバックアップ",
-          icon: "☁️",
-          action: () => alert("バックアップ完了しました"),
-        },
-        {
-          label: "キャッシュを削除",
-          icon: "🗑️",
-          action: () => alert("キャッシュを削除しました"),
-        },
-        {
-          label: "お問い合わせ",
-          icon: "❓",
-          action: () => alert("ブラウザでフォームを開きます"),
-        },
-      ],
-    },
-    {
-      title: "その他",
-      items: [
-        {
-          label: "利用規約",
-          icon: "📄",
-          action: () => alert("利用規約を表示します"),
-        },
-        {
-          label: "ログアウト",
-          icon: "🚪",
-          color: "#ff4d4f",
-          action: () => confirm("ログアウトしますか？"),
-        },
-      ],
+      title: "テーマカラー",
+      type: "colorPicker",
     },
   ];
 
