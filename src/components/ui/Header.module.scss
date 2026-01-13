@@ -1,6 +1,8 @@
 // src/components/ui/Header.module.scss
+@use "../../styles/variables" as v;
+
 .header {
-  height: 60px; // Figmaのサイズに合わせて調整
+  height: 60px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -10,9 +12,11 @@
   top: 0;
   z-index: 100;
   width: 100%;
+  background-color: v.$primary;
 
   .logo {
-    height: 24px; // ロゴの高さ。Figma上のサイズに合わせる
+    filter: var(--logo-filter);
+    height: 26px;
     width: auto;
     object-fit: contain;
   }
