@@ -24,7 +24,7 @@
 
     // 現在のページのアイコンの色を濃くする（NavLinkの機能）
     &.active {
-      color: var(--primary-color, #333);
+      color: var(--accent-color);
     }
   }
 }
