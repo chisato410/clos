@@ -16,13 +16,13 @@ export default function Home({ items = [], memos = [] }) {
       label: "クローゼット",
       icon: "🚪",
       color: "#9B51E0",
-      target: "closet-only", // 直接遷移用フラグ
+      target: "closet-only",
     },
     {
       label: "アーカイブ",
       icon: "📦",
       color: "#828282",
-      target: "archive-only", // 直接遷移用フラグ
+      target: "archive-only",
     },
   ];
 

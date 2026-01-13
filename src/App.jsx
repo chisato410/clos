@@ -17,68 +17,79 @@ const themes = {
   default: {
     primary: "#6a8caf",
     bg: "#f8f8f8",
-    headerText: "#ffffff",
+    accent: "#ffffff",
     preview: null,
+    logoFilter: "invert(0)",
   },
   black: {
-    primary: "#333333",
+    primary: "#1E1E1E",
     bg: "#f0f0f0",
-    headerText: "#ffffff",
+    accent: "#1E1E1E",
     preview: imgBlack,
+    logoFilter: "invert(100%)",
   },
   red: {
-    primary: "#EB5757",
-    bg: "#fff5f5",
-    headerText: "#ffffff",
+    primary: "#88212D",
+    bg: "#FCF2F2",
+    accent: "#88212D",
     preview: imgRed,
+    logoFilter: "invert(100%)",
   },
   yellow: {
-    primary: "#F2C94C",
-    bg: "#fffdf5",
-    headerText: "#ffffff",
+    primary: "#FFB330",
+    bg: "#FFFEE9",
+    accent: "#FFB330",
     preview: imgYellow,
+    logoFilter: "invert(0)",
   },
   blue: {
-    primary: "#2D9CDB",
-    bg: "#f5fbff",
-    headerText: "#ffffff",
+    primary: "#2D4C8C",
+    bg: "#EFF3FC",
+    accent: "#2D4C8C",
     preview: imgBlue,
+    logoFilter: "invert(100%)",
   },
   green: {
-    primary: "#27AE60",
-    bg: "#f5fff7",
-    headerText: "#ffffff",
+    primary: "#1A540F",
+    bg: "#F1F6F0",
+    accent: "#1A540F",
     preview: imgGreen,
+    logoFilter: "invert(100%)",
   },
   color1: {
-    primary: "#BB6BD9",
-    bg: "#faf5ff",
-    headerText: "#ffffff",
+    primary: "#E55C5C",
+    bg: "#EAEAEA",
+    accent: "#71B1FF",
     preview: imgColor1,
+    logoFilter: "invert(0)",
   },
   color2: {
-    primary: "#9B51E0",
-    bg: "#f6f0ff",
-    headerText: "#ffffff",
+    primary: "#FFD209",
+    bg: "#088BC3",
+    accent: "#F4484B",
     preview: imgColor2,
+    logoFilter: "invert(0)",
   },
   color3: {
-    primary: "#56CCF2",
-    bg: "#f0faff",
-    headerText: "#ffffff",
+    primary: "#72D5D8",
+    bg: "#F9BCD2",
+    accent: "#F9BCD2",
     preview: imgColor3,
+    logoFilter: "invert(0)",
   },
   color4: {
-    primary: "#6FCF97",
-    bg: "#f0fffa",
-    headerText: "#ffffff",
+    primary: "#F9F9F9",
+    bg: "#EAC806",
+    accent: "#414B7D",
     preview: imgColor4,
+    logoFilter: "invert(0)",
   },
   color5: {
-    primary: "#FF6B6B",
-    bg: "#fff5f5",
-    headerText: "#ffffff",
+    primary: "#475B1A",
+    bg: "#FFF8EF",
+    accent: "#FF7700",
     preview: imgColor5,
+    logoFilter: "invert(100%)",
   },
 };
 
@@ -94,7 +105,9 @@ export default function App() {
 
     root.style.setProperty("--primary-color", theme.primary);
     root.style.setProperty("--theme-bg", theme.bg);
-    root.style.setProperty("--header-text", theme.headerText);
+    root.style.setProperty("--header-text", theme.accent);
+    root.style.setProperty("--accent-color", theme.accent);
+    root.style.setProperty("--logo-filter", theme.logoFilter || "invert(0)");
 
     localStorage.setItem("app-theme", currentTheme);
   }, [currentTheme]);

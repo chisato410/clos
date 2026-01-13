@@ -4,10 +4,14 @@ $bg: #fff;
 $primary: var(--primary-color);
 $theme-bg: var(--theme-bg);
 $header-text: var(--header-text);
+$accent: var(--accent-color);
 
 $white: #ffffff;
 $error: #ff4d4f;
 $gray-light: #f5f5f5;
 $gray-medium: #999999;
+
+$logo-white: invert(100%);
+$logo-black: invert(0%);
 
 $transition: 0.3s ease;
