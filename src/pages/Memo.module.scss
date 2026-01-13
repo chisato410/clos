@@ -1,13 +1,15 @@
+@use "../styles/variables" as v;
+
 .container {
   display: flex;
   flex-direction: column;
-  height: 100%; // AppLayoutの高さ100%を継承
+  height: 100%;
   background-color: #f8f8f8;
-  overflow: hidden; // 親でのスクロールを禁止し、内部で制御する
+  overflow: hidden;
 }
 
 .fixedHeader {
-  flex-shrink: 0; // ヘッダーが潰れるのを防ぐ
+  flex-shrink: 0;
   padding: 20px 16px 10px;
   background: white;
   text-align: center;
@@ -29,15 +31,19 @@
     border-radius: 20px;
     font-size: 14px;
     outline: none;
-    box-sizing: border-box; // パディングによる見切れ防止
+    box-sizing: border-box;
   }
 
   .searchIcon {
+    display: block;
     position: absolute;
     right: 15px;
     top: 50%;
     transform: translateY(-50%);
-    color: #999;
+    width: 18px;
+    height: 18px;
+    object-fit: contain;
+    filter: invert(100%);
   }
 }
 
@@ -87,7 +93,6 @@
   flex: 1;
   overflow-y: auto;
   background: white;
-  /* iOSのスクロールを滑らかに */
   -webkit-overflow-scrolling: touch;
 }
 
@@ -181,7 +186,7 @@
   padding: 16px;
   background: white;
   border: none;
-  color: #007aff;
+  color: v.$primary;
   font-size: 14px;
   cursor: pointer;
   text-align: center;

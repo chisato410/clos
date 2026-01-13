@@ -1,3 +1,5 @@
+@use "../../styles/variables" as v;
+
 .modalOverlay {
   position: fixed;
   top: 0;
@@ -16,7 +18,7 @@
   background: white;
   border-radius: 16px;
   width: 100%;
-  max-width: 340px; // Figmaに近いコンパクトな幅
+  max-width: 340px;
   padding: 24px;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
   animation: popIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
@@ -50,7 +52,7 @@
   .textarea {
     width: 100%;
     border: none;
-    background: #f2f2f2; // 薄いグレー
+    background: #f2f2f2;
     border-radius: 8px;
     padding: 12px 14px;
     font-size: 14px;
@@ -75,7 +77,7 @@
   .imageLabel {
     display: inline-block;
     font-size: 12px;
-    color: #007aff;
+    color: v.$primary;
     cursor: pointer;
     font-weight: 500;
     &:hover {
@@ -148,7 +150,7 @@
     }
 
     .saveBtn {
-      background: #333; // 保存ボタンはダークトーンが合います
+      background: v.$primary;
       color: white;
     }
   }
